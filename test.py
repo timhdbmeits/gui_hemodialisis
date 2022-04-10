@@ -6,7 +6,7 @@ import warnings
 
 # importing Qt widgets
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt
 
 # Port Detection START
 # List Comprehension ( expression for item in iterable if condition)
@@ -45,6 +45,7 @@ class Worker(QObject):
         self.finished.emit()
 
 
+
 class Gui(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -55,10 +56,14 @@ class Gui(QtWidgets.QMainWindow):
 
         self.thread = None
         self.worker = None  # dibuat none biar tidak langsung membaca saat menjalankan aplikasi
+
         self.pushButton.clicked.connect(self.start_loop)  # Start loop
+
         self.label.setText('PORT :' + ports[0])  # Menampilkan koneksi ke port
 
-        self.pushButton_3.clicked.connect(self.control_led)
+
+        self.pushButton_3.clicked.connect(self.led_on)
+        self.pushButton_4.clicked.connect(self.led_off)
 
     def loop_finished(self):
         print('Loop Finished')
@@ -74,6 +79,7 @@ class Gui(QtWidgets.QMainWindow):
         self.worker.intReady.connect(self.onIntReady)  # menambahkan serial string ke text edit
 
         self.pushButton_2.clicked.connect(self.stop_loop)  # stop the loop on the stop button click
+
 
         self.worker.finished.connect(self.loop_finished)  # do something in the gui when the worker loop ends
         self.worker.finished.connect(self.thread.quit)  # tell the thread it's time to stop running
@@ -93,17 +99,24 @@ class Gui(QtWidgets.QMainWindow):
         self.textEdit_2.append("{}".format(i[1]))
         print(i)
 
-    def control_led(self):
+    def led_on(self):
         data = b'1'
         n = ser.write(bytes(data))
-        self.textEdit_2.append(str(n))
+        print(n)
+        self.ledEdit.setText('hidup')
 
-def run():
+    def led_off(self):
+        data = b'2'
+        n = ser.write(bytes(data))
+        print(n)
+        self.ledEdit.setText('mati')
+
+
+
+
+
+if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     main = Gui()
     main.show()
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    run()

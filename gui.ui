@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1014</width>
-    <height>660</height>
+    <width>1104</width>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,13 +32,16 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0" rowspan="3">
      <widget class="QWidget" name="pbarmenu" native="true">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <widget class="QTextEdit" name="textEdit_2">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>230</y>
          <width>161</width>
-         <height>71</height>
+         <height>81</height>
         </rect>
        </property>
        <property name="maximumSize">
@@ -123,51 +126,432 @@
         </rect>
        </property>
        <property name="text">
-        <string>LED</string>
+        <string>LED ON</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QLineEdit" name="ledEdit">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>190</y>
+         <width>113</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_4">
        <property name="geometry">
         <rect>
          <x>120</x>
          <y>190</y>
-         <width>81</width>
-         <height>20</height>
+         <width>93</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
-        <string>CheckBox</string>
+        <string>LED OFF</string>
        </property>
-      </widget>
-      <widget class="QSlider" name="verticalSlider">
-       <property name="enabled">
+       <property name="checkable">
         <bool>false</bool>
        </property>
+      </widget>
+      <widget class="QWidget" name="gridLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>370</x>
-         <y>230</y>
-         <width>22</width>
-         <height>160</height>
+         <x>10</x>
+         <y>310</y>
+         <width>411</width>
+         <height>331</height>
         </rect>
        </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
+       <layout class="QGridLayout" name="gridLayout_3" rowstretch="0" columnstretch="0,0,0">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="2">
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,10,1">
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QLabel" name="s3_label">
+            <property name="text">
+             <string>SENSOR 1</string>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QProgressBar" name="s3_bar">
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QProgressBar {
+    text-align: center;
+	background: #FFFFFF;
+	border: 2px solid #06752C;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+QProgressBar::chunk {
+    background: #06752C;
+}</string>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>1023</number>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="textVisible">
+             <bool>true</bool>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="textDirection">
+             <enum>QProgressBar::BottomToTop</enum>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="s3_edit">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,10,1">
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QLabel" name="s2_label">
+            <property name="text">
+             <string>SENSOR 1</string>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QProgressBar" name="s2_bar">
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QProgressBar {
+    text-align: center;
+	background: #FFFFFF;
+	border: 2px solid #FF0000;;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+QProgressBar::chunk {
+    background: #FF0000;;
+}</string>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>1023</number>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="textVisible">
+             <bool>true</bool>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="textDirection">
+             <enum>QProgressBar::BottomToTop</enum>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="s2_edit">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_1" stretch="1,10,1">
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QLabel" name="s1_label">
+            <property name="text">
+             <string>SENSOR 1</string>
+            </property>
+           </widget>
+          </item>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QProgressBar" name="s1_bar">
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QProgressBar {
+    text-align: center;
+	background: #FFFFFF;
+	border: 2px solid #001AFF;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+QProgressBar::chunk {
+    background: #001AFF;
+}</string>
+            </property>
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>1023</number>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="textVisible">
+             <bool>true</bool>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="textDirection">
+             <enum>QProgressBar::BottomToTop</enum>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="s1_edit"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
     <item row="0" column="2" rowspan="3">
      <widget class="QWidget" name="ufmenu" native="true">
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">font: 20pt &quot;Roboto&quot;;</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="4" column="0">
+        <widget class="QWidget" name="start" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <widget class="QLabel" name="label_4">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>110</y>
+            <width>232</width>
+            <height>32</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 14pt &quot;Roboto&quot;;
+background-color: rgb(195, 240, 237);</string>
+          </property>
+          <property name="text">
+           <string>(h:min)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_11">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>232</width>
+            <height>40</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(195, 240, 237);</string>
+          </property>
+          <property name="text">
+           <string>START</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="button_end_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>40</y>
+            <width>231</width>
+            <height>70</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 50pt;
+color: #333;
+background: #C4C4C4;
+border: 1px solid #FFFFFF;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 5px;</string>
+          </property>
+          <property name="text">
+           <string>4:00</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QWidget" name="ufobj" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QWidget" name="uftime" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QWidget" name="ufrate" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QWidget" name="ufrmv" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+        </widget>
+       </item>
        <item row="4" column="1">
-        <widget class="QWidget" name="end" native="true"/>
+        <widget class="QWidget" name="end" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <widget class="QLabel" name="label_10">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>232</width>
+            <height>40</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(195, 240, 237);</string>
+          </property>
+          <property name="text">
+           <string>END</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>110</y>
+            <width>232</width>
+            <height>32</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 14pt &quot;Roboto&quot;;
+background-color: rgb(195, 240, 237);</string>
+          </property>
+          <property name="text">
+           <string>(h:min)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="button_end">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>40</y>
+            <width>241</width>
+            <height>70</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 50pt;
+color: #333;
+background: #C4C4C4;
+border: 1px solid #FFFFFF;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 5px;</string>
+          </property>
+          <property name="text">
+           <string>4:00</string>
+          </property>
+         </widget>
+        </widget>
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QWidget" name="errormsg" native="true">
@@ -175,21 +559,6 @@
           <bool>true</bool>
          </property>
         </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QWidget" name="ufobj" native="true"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QWidget" name="uftime" native="true"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QWidget" name="ufrate" native="true"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QWidget" name="ufrmv" native="true"/>
-       </item>
-       <item row="4" column="0">
-        <widget class="QWidget" name="start" native="true"/>
        </item>
       </layout>
      </widget>
