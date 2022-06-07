@@ -8,6 +8,8 @@ import numpy as np
 from PyQt5 import QtWidgets, uic, QtSerialPort
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt
 
+
+
 # Port Detection START
 # List Comprehension ( expression for item in iterable if condition)
 ports = [
@@ -22,18 +24,6 @@ if len(ports) > 1:
     warnings.warn('Connected....')
 
 ser = serial.Serial(ports[0], 115200)
-
-
-#
-# @pyqtSlot()
-# def receive(self):
-#     while self.serial.canReadLine():
-#         text = self.serial.readLine().data().decode()
-#         text = text.rstrip('\r\n')
-#         self.output_te.append(text)
-#
-# ser = QtSerialPort.QSerialPort(ports[0], 115200, readyRead=receive)
-
 
 # Port Detection END
 
@@ -73,16 +63,22 @@ class Gui(QtWidgets.QMainWindow):
         super(Gui, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("coba.ui", self)
-
+        uic.loadUi("main.ui", self)
+        self.w = None
         self.thread = None
         self.worker = None  # dibuat none biar tidak langsung membaca saat menjalankan aplikasi
-
-        self.start_btn.clicked.connect(self.start_loop)  # Start loop
-        self.pump = 0
         self.heater = 0
-        self.pump_btn.clicked.connect(self.control_pump)
-        self.heater_btn.clicked.connect(self.control_heater)
+        self.pump = 0
+        self.start_loop()
+
+        self.uftime = 0
+        self.uftime_button.clicked.connect(lambda : self.add_window('1'))
+        self.ufrate_button.clicked.connect(lambda: self.add_window('2'))
+        self.start_button.clicked.connect(lambda: self.add_window('3'))
+        self.end_button.clicked.connect(lambda: self.add_window('4'))
+        # self.ufobj_button.clicked.connect(self.start_loop)  # Start loop
+        # self.pump_btn.clicked.connect(self.control_pump)
+        # self.heater_btn.clicked.connect(self.control_heater)
 
     def loop_finished(self):
         print('Loop Finished')
@@ -98,7 +94,8 @@ class Gui(QtWidgets.QMainWindow):
         self.worker.bar1.connect(self.databar1)
         self.worker.bar2.connect(self.databar2)
         # self.worker.bar3.connect(self.databar3)
-        self.stop_btn.clicked.connect(self.stopbaca)  # stop the loop on the stop button click
+        # self.uftime_button.clicked.connect(self.stopbaca)  # stop the loop on the stop button click
+
 
         self.worker.finished.connect(self.loop_finished)  # do something in the gui when the worker loop ends
         self.worker.finished.connect(self.thread.quit)  # tell the thread it's time to stop running
@@ -130,24 +127,93 @@ class Gui(QtWidgets.QMainWindow):
     # led
     def control_pump(self):
         if self.pump == 0:
-            n = ser.write(bytes(b'2'))
+            ser.write(bytes(b'2'))
             self.pump_label.setText('ON')
             self.pump = 1
         elif self.pump == 1:
-            n = ser.write(bytes(b'1'))
+            ser.write(bytes(b'1'))
             self.pump_label.setText('OFF')
             self.pump = 0
 
     # motorservo
     def control_heater(self):
         if self.heater == 0:
-            n = ser.write(bytes(b'4'))
+            ser.write(bytes(b'4'))
             self.heater_label.setText("ON")
             self.heater = 1
         elif self.heater == 1:
-            n = ser.write(bytes(b'3'))
+            ser.write(bytes(b'3'))
             self.heater_label.setText("OFF")
             self.heater = 0
+
+    # @pyqtSlot(str,float)
+    def update_time(self, uftime_str, uftime):
+        self.uftime_str = uftime_str
+        self.uftime = uftime
+
+        if self.button == '1':
+            self.uftime_button.setText(self.uftime_str)
+        elif self.button == '2':
+            self.ufrate_button.setText(self.uftime_str)
+        elif self.button == '3':
+            self.start_button.setText(self.uftime_str)
+        elif self.button == '4':
+            self.end_button.setText(self.uftime_str)
+
+    def add_window(self,button):
+        self.button = button
+        # if self.w is None:
+        #     self.w = Time2()
+        #     self.w.on_submit.connect(self.update_time)
+        #     self.w.show()
+        #
+        # else:
+        #     self.w.close()  # Close window.
+        #     self.w = None  # Discard reference.
+        self.dialog =  Time2()
+        self.dialog.submitted.connect(self.update_time)
+        self.dialog.show()
+
+class Time2(QtWidgets.QMainWindow):
+
+    submitted = pyqtSignal(str,float)
+
+    def __init__(self):
+        super().__init__()
+
+        # self.mainWindow = Time()
+        # Load the UI Page
+        uic.loadUi("timewindow.ui", self)
+
+        self.hours = None
+        self.hours_str = None
+        self.minutes = None
+        self.minutes_str = None
+        self.uftime = None
+        self.uftime_str = None
+        self.ok_btn.clicked.connect(lambda: self.ok())
+
+    def ok(self):
+        self.hours = self.h_spinbox.value()
+        self.minutes = self.m_spinbox.value()
+        self.hours_str = f'{self.hours}'
+        self.minutes_str = f'{self.minutes}'
+        # satuan detik(second) buat countdown
+        self.uftime = (self.hours * 60 + self.minutes) * 60
+        print(self.uftime,"second")
+        print(self.minutes, "menit")
+        if self.hours < 10:
+            self.hours_str = f'0{self.hours}'
+        if self.minutes < 10:
+            self.minutes_str = f'0{self.minutes}'
+        self.uftime_str = f'{self.hours_str}:{self.minutes_str}'
+        # self.ok_btn.setText(self.uftime_str)
+        # Time.uftime = self.total_tim
+        # self.on_submit()
+
+        self.submitted.emit(self.uftime_str,
+                            self.uftime)
+        self.close()
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ EasyNex myNex(Serial1);   // Create an object of EasyNex class with the name < m
 float temperature_value_c = 0.0; // stores temperature value
 
 uint16_t voltageGraph;   // a variable to store the reading
+uint16_t voltageGraph1;
 // for simplicity reasons, we do not use float and we are going to take the measure in millivolts
 
 const int REFRESH_TIME = 100;           // time to refresh the Nextion page every 100 ms
@@ -72,8 +73,8 @@ void sendTemperatureGraph(int xx) {
 
 void sendTemperatureGraph1(int xx) {
   if ((millis() - refresh_timer) > REFRESH_TIME) { //IMPORTANT do not have serial print commands in the loop without a delay
-    voltageGraph = map(getTemperature(xx), 0, 100, 0, 255);
-    myNex.writeNum("va1.val", voltageGraph);
+    voltageGraph1 = map(getTemperature(xx), 0, 100, 0, 255);
+    myNex.writeNum("va1.val", voltageGraph1);
 
     refresh_timer = millis();  // Set the timer equal to millis, create a time stamp to start over the "delay"
   }
@@ -110,7 +111,7 @@ void loop()
     sendTemperatureToNextion(0);
     sendTemperatureGraph(0);
     sendTemperatureToNextion1(1);
-    sendTemperatureGraph(1);
+    sendTemperatureGraph1(1);
 
     if (Serial.available() > 0) {
       tes = Serial.read();
