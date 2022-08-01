@@ -341,7 +341,7 @@ font: bold 16px &quot;Roboto&quot;;</string>
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_9">
+           <widget class="QLabel" name="time_label">
             <property name="styleSheet">
              <string notr="true">font: bold 16px &quot;Roboto&quot;;</string>
             </property>
@@ -2351,7 +2351,7 @@ font: bold 16px &quot;Roboto&quot;;</string>
                   <number>2</number>
                  </property>
                  <item row="1" column="0">
-                  <widget class="QPushButton" name="ufrate_button_">
+                  <widget class="QPushButton" name="ufrate_button">
                    <property name="minimumSize">
                     <size>
                      <width>211</width>
@@ -2450,7 +2450,7 @@ border-radius: 5px;</string>
                   <number>0</number>
                  </property>
                  <item row="1" column="0">
-                  <widget class="QPushButton" name="ufobj_button_2">
+                  <widget class="QPushButton" name="ufobj_button">
                    <property name="minimumSize">
                     <size>
                      <width>211</width>
@@ -2549,7 +2549,7 @@ border-radius: 5px;</string>
                   <number>0</number>
                  </property>
                  <item row="1" column="0">
-                  <widget class="QPushButton" name="ufrmv_button_2">
+                  <widget class="QPushButton" name="ufrmv_button">
                    <property name="minimumSize">
                     <size>
                      <width>211</width>

@@ -83,13 +83,13 @@ class Gui(QtWidgets.QMainWindow):
 
         self.start_count = False
         self.startcd_btn.clicked.connect(self.countdown)
-        # creating a timer object
+        # creating a timer_time object
         timer = QTimer(self)
 
-        # adding action to timer
+        # adding action to timer_time
         timer.timeout.connect(self.showTime)
 
-        # update the timer every tenth second
+        # update the timer_time every tenth second
         timer.start(100)
 
 
@@ -104,7 +104,7 @@ class Gui(QtWidgets.QMainWindow):
             # incrementing the counter
             self.uftime -= 1
 
-            # timer is completed
+            # timer_time is completed
             if self.uftime == 0:
                 # making flag false
                 self.start = False
