@@ -4,7 +4,12 @@ import sys
 import time
 import warnings
 import numpy as np
+import traceback
+import json
 # importing Qt widgets
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from PyQt5 import QtWidgets, uic, QtSerialPort
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt, QTimer, QTime
 
@@ -16,13 +21,102 @@ UFTIME_VAL = 0
 UFTIME_STR = ''
 
 
+# Port Detection START
+# List Comprehension ( expression for item in iterable if condition)
+ports = [
+    port.device
+    for port in serial.tools.list_ports.comports()
+    if 'USB' in port.description
+]
+if not ports:
+    raise IOError("There is no device exist on serial port!")
+
+if len(ports) > 1:
+    warnings.warn('Connected....')
+
+ser = serial.Serial(ports[0], 115200)
+
+# Port Detection END
+
+
+class WorkerSignals(QObject):
+    '''
+    Defines the signals available from a running worker thread.
+
+    Supported signals are:
+
+    finished
+        No data
+
+    error
+        tuple (exctype, value, traceback.format_exc() )
+
+    result
+        object data returned from processing, anything
+
+    progress
+        int indicating % progress
+
+    '''
+    finished = pyqtSignal()
+    error = pyqtSignal(tuple)
+    result = pyqtSignal(object)
+    progress = pyqtSignal(int)
+
+
+    #Initialise signal
+    T3 = pyqtSignal(float)
+    EC = pyqtSignal(float)
+
+
+
+class Worker(QRunnable):
+    '''
+    Worker thread
+
+    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
+
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super(Worker, self).__init__()
+
+        self.signals = WorkerSignals()
+        self.run = True
+
+    @pyqtSlot()
+    def run(self):
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+        while self.run:
+            line = ser.readline().decode().rstrip('\r\n')
+            sensor = json.loads(line)
+
+            # initialise variable sensor for arduino read
+            sensor_t3 = sensor["T3"]
+            sensor_ec = sensor["EC"]
+
+            #emit signals to be read in main GUI
+            self.signals.T3.emit(sensor_t3)
+            self.signals.EC.emit(sensor_ec)
+        self.signals.finished.emit()
+
+
 class Gui(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(Gui, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("basic_ui_json.ui", self)
+        uic.loadUi("main.ui", self)
+
 
         # getting current value
         current_time = QTime.currentTime()
@@ -51,6 +145,24 @@ class Gui(QtWidgets.QMainWindow):
         self.uftime_button.clicked.connect(lambda: self.addWindow('uftime'))
         self.ufobj_button.clicked.connect(lambda: self.addWindow('ufobj'))
 
+        self.threadpool = QThreadPool()
+        self.readData()
+
+    def readData(self):
+        self.worker = Worker()
+        self.worker.signals.T3.connect(self.showT3)
+        self.worker.signals.EC.connect(self.showEC)
+
+        self.threadpool.start(self.worker)
+
+
+    def showT3(self, s):
+        self.temp_edit.setText(str(s))
+
+    def showEC(self, s):
+        self.ec_edit.setText(str(s))
+
+
 
 
     def showTime(self):
@@ -60,6 +172,7 @@ class Gui(QtWidgets.QMainWindow):
         label_time = current_time.toString('hh:mm')
         # showing it to the label
         self.time_label.setText(label_time)
+
 
     def startDia(self):
         # creating a timer_time object, adding action to timer_time, update the timer_time every minutes
@@ -90,11 +203,11 @@ class Gui(QtWidgets.QMainWindow):
                 self.start = False
                 self.cd_edit.setText('0')
 
-        # mulai jalan setiap menit
-        if self.start and (UFTIME_VAL % 60 == 0):
+        #mulai jalan setiap menit
+        if self.start and (UFTIME_VAL%60 == 0):
             # getting text from count
-            self.hours = int(UFTIME_VAL / 3600)
-            self.minutes = int((UFTIME_VAL % 3600) / 60)
+            self.hours = int(UFTIME_VAL/3600)
+            self.minutes = int((UFTIME_VAL%3600)/60)
             # if self.hours < uftime_hours:
 
             self.text = f'{self.hours:02}:{self.minutes:02}'
@@ -119,10 +232,11 @@ class Gui(QtWidgets.QMainWindow):
         elif self.button == 'ufobj':
             self.ufobj_button.setText(self.time_str)
 
+
     def addWindow(self, button):
         self.button = button
 
-        if button == 'uftime':
+        if button == 'uftime' :
             self.dialog = TimeWindow()
         else:
             self.dialog = LiterWindow()

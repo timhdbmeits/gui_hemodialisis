@@ -48,7 +48,7 @@ class Worker(QObject):
             i = line.split('a')
 
             # print(i)
-            # time.sleep(0.1)
+            # value.sleep(0.1)
             self.progress.emit(line)  # bound PYQT_SIGNAL String
             self.bar1.emit(float(i[0]))  # bound PYQT_SIGNAL String
             self.bar2.emit(float(i[1]))  # bound PYQT_SIGNAL String
@@ -90,7 +90,7 @@ class Gui(QtWidgets.QMainWindow):
         self.stop_btn.clicked.connect(self.stopbaca)  # stop the loop on the stop button click
 
         self.worker.finished.connect(self.loop_finished)  # do something in the gui when the worker loop ends
-        self.worker.finished.connect(self.thread.quit)  # tell the thread it's time to stop running
+        self.worker.finished.connect(self.thread.quit)  # tell the thread it's value to stop running
         self.worker.finished.connect(self.worker.deleteLater)  # have worker mark itself for deletion
         self.thread.finished.connect(self.thread.deleteLater)  # have thread mark itself for deletion
 

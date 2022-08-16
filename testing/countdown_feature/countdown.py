@@ -49,7 +49,7 @@ class Worker(QObject):
             # print(line)
             i = line.split('a')
             # print(i)
-            # time.sleep(0.1)
+            # value.sleep(0.1)
             self.progress.emit(line)  # bound PYQT_SIGNAL String
             self.bar1.emit(float(i[0]))  # bound PYQT_SIGNAL String
             self.bar2.emit(float(i[1]))  # bound PYQT_SIGNAL String
@@ -73,7 +73,7 @@ class Worker2(QObject):
 
             print(str(line))
             # print(i)
-            # time.sleep(0.1)
+            # value.sleep(0.1)
             while line>0:
                 self.progress.emit(str(line))  # bound PYQT_SIGNAL String
                 line-=1
@@ -117,7 +117,7 @@ class Gui(QtWidgets.QMainWindow):
         self.thread2.started.connect(self.worker2.work)  # begin our worker object's loop when the thread starts running
         self.worker2.progress.connect(self.cd)  # menambahkan serial string ke text edit
 
-        self.worker2.finished.connect(self.thread2.quit)  # tell the thread it's time to stop running
+        self.worker2.finished.connect(self.thread2.quit)  # tell the thread it's value to stop running
         self.worker2.finished.connect(self.worker.deleteLater)  # have worker mark itself for deletion
         self.thread2.finished.connect(self.thread.deleteLater)  # have thread mark itself for deletion
 
@@ -145,7 +145,7 @@ class Gui(QtWidgets.QMainWindow):
         # self.uftime_button.clicked.connect(self.stopbaca)  # stop the loop on the stop button click
 
         self.worker.finished.connect(self.loop_finished)  # do something in the gui when the worker loop ends
-        self.worker.finished.connect(self.thread.quit)  # tell the thread it's time to stop running
+        self.worker.finished.connect(self.thread.quit)  # tell the thread it's value to stop running
         self.worker.finished.connect(self.worker.deleteLater)  # have worker mark itself for deletion
         self.thread.finished.connect(self.thread.deleteLater)  # have thread mark itself for deletion
 

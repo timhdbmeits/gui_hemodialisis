@@ -81,7 +81,7 @@ class Gui(QtWidgets.QMainWindow):
 
 
         self.worker.finished.connect(self.loop_finished)  # do something in the gui when the worker loop ends
-        self.worker.finished.connect(self.thread.quit)  # tell the thread it's time to stop running
+        self.worker.finished.connect(self.thread.quit)  # tell the thread it's value to stop running
         self.worker.finished.connect(self.worker.deleteLater)  # have worker mark itself for deletion
         self.thread.finished.connect(self.thread.deleteLater)  # have thread mark itself for deletion
 

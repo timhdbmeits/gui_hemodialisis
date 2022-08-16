@@ -22,7 +22,7 @@ class Gui(QtWidgets.QMainWindow):
         super(Gui, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("basic_ui_json.ui", self)
+        uic.loadUi("tes.ui", self)
 
         # getting current value
         current_time = QTime.currentTime()
@@ -50,7 +50,37 @@ class Gui(QtWidgets.QMainWindow):
         # connect Button
         self.uftime_button.clicked.connect(lambda: self.addWindow('uftime'))
         self.ufobj_button.clicked.connect(lambda: self.addWindow('ufobj'))
+        self.ufdata_button.clicked.connect(self.showUFData)
+        self.setting_button.clicked.connect(self.showSetting)
 
+
+    def showSetting(self):
+        self.ufdata_button.setStyleSheet("font: 50pt;"
+                                         "color: #333;"
+                                         "background: #C4C4C4;"
+                                         "border: 1px solid #FFFFFF;"
+                                         "box-sizing: border-box;"
+                                         "box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
+                                         "border-radius: 5px;")
+        self.data_stackedWidget.setCurrentIndex(1)
+        if self.data_stackedWidget.CurrentIndex == 1:
+            self.ufdata_button.setStyleSheet("font: 50pt;"
+                                             "color: #333;"
+                                             "background: #5555FF;"
+                                             "border: 1px solid #FFFFFF;"
+                                             "box-sizing: border-box;"
+                                             "box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
+                                             "border-radius: 5px;")
+
+    def showUFData(self):
+        self.ufdata_button.setStyleSheet("font: 50pt;"
+                                         "color: #333;"
+                                         "background: #C4C4C4;"
+                                         "border: 1px solid #FFFFFF;"
+                                         "box-sizing: border-box;"
+                                         "box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);"
+                                         "border-radius: 5px;")
+        self.data_stackedWidget.setCurrentIndex(0)
 
 
     def showTime(self):
