@@ -1,0 +1,138 @@
+Metadata-Version: 2.1
+Name: mosquito
+Version: 0.3.2
+Summary: a request obfuscator and web scraping toolkit
+Home-page: https://gitlab.com/luoc0815/mosquito
+Author: luoc
+Author-email: luoc@posteo.org
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: tqdm
+Provides-Extra: develop
+Requires-Dist: nose ; extra == 'develop'
+
+# mosquito
+**a request obfuscator and web scraping toolkit**
+
+_mosquito_ gives you an API similar to [requests](https://3.python-requests.org/) and in fact uses 
+it internally. Each HTTP request exposes a number of information such as **user agent** or 
+**IP address**  that allows a server to identify you or your application. _mosquito_ lets you set 
+up multiple identities and schedules your requests to them. Each identity may consist of a whole 
+bunch of attributes that are supported by _requests_'s 
+[session object](https://3.python-requests.org/user/advanced/#session-objects) e.g.: **headers**, 
+**proxies** or **cookies**. To list all attributes available execute 
+`mosquito.available_attributes()`.
+
+## Installation
+**from PyPI**
+```bash
+pip install mosquito
+```
+
+## Usage
+_demo/demo.py_ 
+```python
+#!/usr/bin/env python3
+# Standard library modules.
+
+# Third party modules.
+
+# Local modules
+import mosquito
+from mosquito.tests import httpbin
+
+# Globals and constants variables.
+
+
+# Register attribute callback using a decorator ...
+@mosquito.attribute('headers')
+def headers():
+    for name in ('linux', 'mac', 'windows'):
+        yield {'user-agent': name}
+
+
+# ... or register attributes by hand.
+mosquito.register_attributes(delay=.0, params=[{'foo': 42}, {'bar': 13, 'baz': 37}])
+
+
+# Let's list all available attributes.
+print('available:', mosquito.available_attributes())
+
+
+with mosquito.swarm(repeat_on=(503,), max_attempts=3) as scheduler:
+    # Note that the swarm uses 2 sessions only, determined by the minimum length of passed
+    # attributes which is `params` in our case.
+    print(f'swarm uses {len(scheduler.swarm)} sessions')
+
+    for i in range(5):
+        # `swarm wraps` requests' api and therefore supports get, post, put etc.
+        # parameters passed directly to request method will overwrite such registered before
+        result = scheduler.get(httpbin('/user-agent'), params=dict(bar=0))
+        print(i, result.url, result.json())
+
+    # Let's provoke an error ...
+    try:
+        scheduler.get(httpbin('/status/404'))
+
+    except mosquito.MosquitoError as mre:
+        print(mre)
+
+    # ... and another one, being more obstinate this time
+    try:
+        scheduler.get(httpbin('/status/503'))
+
+    except mosquito.MosquitoError as mre:
+        print(mre)
+```
+
+
+## Testing
+Some unit tests require a httpbin instance which is [httpbin.org](https://httpbin.org) by default. 
+For sake of speed and reliability it's recommended to run your own instance using the docker 
+image. Check [hub.docker.com/r/kennethreitz/httpbin](https://hub.docker.com/r/kennethreitz/httpbin/) 
+for more information.
+
+```bash
+# run httpbin server using podman (works the same with docker)
+podman run -p 8080:80 kennethreitz/httpbin
+
+# let mosquito know its location by setting an environment variable
+export HTTPBIN_BASE_URL=http://localhost:8080 
+```
+
+The actual test is ran by:
+
+```bash
+python -m mosquito.tests
+```
+
+## Feedback
+For feedback of any kind write an issue at 
+[gitlab.com](https://gitlab.com/luoc0815/mosquito/issues). Thank you for using _mosquito_.
+```
+mosquito        \             /
+                 \     |     /
+                 /   \ | /   \
+                 \    \|/    /
+                  \,  o^o  ,/
+                    \,/"\,/
+            ,,,,----,{/X\},----,,,,
+   ,,---''''      _-'{\X/}'-_      ''''---,,
+ /'            ,-'/   \V/   \'-,            '\
+(        ,--''/   |   (_)   |   \''--,        )
+ '--,,-''    |    |   /_\   |   |     ''-,,--'
+            /'    |  (_-_)  |   '\
+           /     /'   \_/   '\    \
+          /     /     (_)     \    \
+               /       V       \
+              /                 \
+             /                   \             
+```
+
+
