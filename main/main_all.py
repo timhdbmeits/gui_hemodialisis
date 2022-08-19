@@ -189,7 +189,7 @@ class Gui(QtWidgets.QMainWindow):
         super(Gui, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("main.ui", self)
+        uic.loadUi("../UIdesign/main.ui", self)
 
         # getting current value
         current_time = QTime.currentTime()
@@ -360,12 +360,14 @@ class Gui(QtWidgets.QMainWindow):
         self.cd_edit.setText(self.text)
 
     def updateData(self, string, value):
+        global UFTIME_VAL
+        global UFTIME_STR
+        global UFOBJ_VAL
+        global UFOBJ_STR
         self.string = string
         self.value = value
 
         if self.button == 'uftime':
-            global UFTIME_VAL
-            global UFTIME_STR
             UFTIME_VAL = self.value
             UFTIME_STR = self.string
             uffinish_time = self.current_time.addSecs(UFTIME_VAL)
@@ -375,8 +377,7 @@ class Gui(QtWidgets.QMainWindow):
             self.dialeft_edit.setText(UFTIME_STR)
 
         elif self.button == 'ufobj':
-            global UFOBJ_VAL
-            global UFOBJ_STR
+
             UFOBJ_VAL = self.value
             UFOBJ_STR = self.string
             self.ufobj_button.setText(UFOBJ_STR)
@@ -390,14 +391,14 @@ class Gui(QtWidgets.QMainWindow):
             self.ufrate_button.setText(UFRATE_STR)
 
     def addWindow(self, button):
-
-        if button == 'uftime':
+        self.button = button
+        if self.button == 'uftime':
             dialog = TimeWindow()
         else:
             dialog = LiterWindow()
 
         dialog.submitted.connect(self.updateData)
-        dialog.show_()
+        dialog.show()
 
     # TODO tes ngirim data ke microcontroller
     def sendData(self):
@@ -413,7 +414,7 @@ class TimeWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         # Load the UI Page
-        uic.loadUi("timewindow.ui", self)
+        uic.loadUi("../UIdesign/timewindow.ui", self)
 
         self.hours = None
         self.hours_str = None
@@ -452,7 +453,7 @@ class LiterWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         # Load the UI Page
-        uic.loadUi("literwindow.ui", self)
+        uic.loadUi("../UIdesign/literwindow.ui", self)
 
         self.liters = None
         self.liters_str = None
