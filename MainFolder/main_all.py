@@ -127,28 +127,28 @@ class Worker(QRunnable):
             EC = sensor["EC"]
             PH = sensor["PH"]
             FM = sensor["FM"]
-            VD = sensor["VD"]
-            BD = sensor["BD"]
-            HT = sensor["HT"]
-            CL = sensor["CL"]
-            V1 = sensor["V"][0]
-            V2 = sensor["V"][1]
-            V3 = sensor["V"][2]
-            V4 = sensor["V"][3]
-            V5 = sensor["V"][4]
-            V6 = sensor["V"][5]
-            V7 = sensor["V"][6]
-            V8 = sensor["V"][7]
-            V9 = sensor["V"][8]
-            V10 = sensor["V"][9]
-            V11 = sensor["V"][10]
-            V12 = sensor["V"][11]
-            V13 = sensor["V"][12]
-            BUBBLE = sensor["BUBBLE"]
-            PDVal = sensor["PRESS"][0]
-            PAVal = sensor["PRESS"][1]
-            PVVal = sensor["PRESS"][2]
-            ERR = sensor["ERR"]
+            # VD = sensor["VD"]
+            # BD = sensor["BD"]
+            # HT = sensor["HT"]
+            # CL = sensor["CL"]
+            # V1 = sensor["V"][0]
+            # V2 = sensor["V"][1]
+            # V3 = sensor["V"][2]
+            # V4 = sensor["V"][3]
+            # V5 = sensor["V"][4]
+            # V6 = sensor["V"][5]
+            # V7 = sensor["V"][6]
+            # V8 = sensor["V"][7]
+            # V9 = sensor["V"][8]
+            # V10 = sensor["V"][9]
+            # V11 = sensor["V"][10]
+            # V12 = sensor["V"][11]
+            # V13 = sensor["V"][12]
+            # BUBBLE = sensor["BUBBLE"]
+            # PDVal = sensor["PRESS"][0]
+            # PAVal = sensor["PRESS"][1]
+            # PVVal = sensor["PRESS"][2]
+            # ERR = sensor["ERR"]
 
             # emit signals to be read in main GUI
             self.signals.T1s.emit(T1)
@@ -157,28 +157,28 @@ class Worker(QRunnable):
             self.signals.ECs.emit(EC)
             self.signals.PHs.emit(PH)
             self.signals.FMs.emit(FM)
-            self.signals.VDs.emit(VD)
-            self.signals.BDs.emit(BD)
-            self.signals.HTs.emit(HT)
-            self.signals.CLs.emit(CL)
-            self.signals.V1s.emit(V1)
-            self.signals.V2s.emit(V2)
-            self.signals.V3s.emit(V3)
-            self.signals.V4s.emit(V4)
-            self.signals.V5s.emit(V5)
-            self.signals.V6s.emit(V6)
-            self.signals.V7s.emit(V7)
-            self.signals.V8s.emit(V8)
-            self.signals.V9s.emit(V9)
-            self.signals.V10s.emit(V10)
-            self.signals.V11s.emit(V11)
-            self.signals.V12s.emit(V12)
-            self.signals.V13s.emit(V13)
-            self.signals.BUBBLEs.emit(BUBBLE)
-            self.signals.PDVals.emit(PDVal)
-            self.signals.PAVals.emit(PAVal)
-            self.signals.PVVals.emit(PVVal)
-            self.signals.ERRs.emit(ERR)
+            # self.signals.VDs.emit(VD)
+            # self.signals.BDs.emit(BD)
+            # self.signals.HTs.emit(HT)
+            # self.signals.CLs.emit(CL)
+            # self.signals.V1s.emit(V1)
+            # self.signals.V2s.emit(V2)
+            # self.signals.V3s.emit(V3)
+            # self.signals.V4s.emit(V4)
+            # self.signals.V5s.emit(V5)
+            # self.signals.V6s.emit(V6)
+            # self.signals.V7s.emit(V7)
+            # self.signals.V8s.emit(V8)
+            # self.signals.V9s.emit(V9)
+            # self.signals.V10s.emit(V10)
+            # self.signals.V11s.emit(V11)
+            # self.signals.V12s.emit(V12)
+            # self.signals.V13s.emit(V13)
+            # self.signals.BUBBLEs.emit(BUBBLE)
+            # self.signals.PDVals.emit(PDVal)
+            # self.signals.PAVals.emit(PAVal)
+            # self.signals.PVVals.emit(PVVal)
+            # self.signals.ERRs.emit(ERR)
 
         self.signals.finished.emit()
 
@@ -189,7 +189,7 @@ class Gui(QtWidgets.QMainWindow):
         super(Gui, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("tes.ui", self)
+        uic.loadUi("main.ui", self)
 
         # getting current value
         current_time = QTime.currentTime()
@@ -237,9 +237,9 @@ class Gui(QtWidgets.QMainWindow):
         self.ufobj_button.clicked.connect(lambda: self.addWindow('ufobj'))
         self.ufdata_button.clicked.connect(self.function_UFData)
         self.setting_button.clicked.connect(self.function_Setting)
-        self.dialyse_button.clicked.connect(self.function_Dialyse)
-        self.bypass_button.clicked.connect(self.function_Bypass)
-        self.drain_button.clicked.connect(self.function_Drain)
+        # self.dialyse_button.clicked.connect(self.function_Dialyse)
+        # self.bypass_button.clicked.connect(self.function_Bypass)
+        # self.drain_button.clicked.connect(self.function_Drain)
 
         self.threadpool = QThreadPool()
         self.readData()

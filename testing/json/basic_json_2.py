@@ -165,16 +165,17 @@ class Gui(QtWidgets.QMainWindow):
         self.threadpool = QThreadPool()
         self.readData()
 
-
+#TODO mengirim data ke teensy
     def showLED(self):
-        if JSON_IN["MODE"] == 0 :
-            JSON_IN["MODE"] == 1
-        elif JSON_IN["MODE"] == 1 :
-            JSON_IN["MODE"] == 0
+
+        if JSON_IN["MODE"] == 0:
+            JSON_IN["MODE"] = 1
+        elif JSON_IN["MODE"] == 1:
+            JSON_IN["MODE"] = 0
+
         dataJSON = json.dumps(JSON_IN)
         ser.write(bytes(dataJSON, 'utf-8'))
         print(dataJSON)
-
 
     def readData(self):
         self.worker = Worker()

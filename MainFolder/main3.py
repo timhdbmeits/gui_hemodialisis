@@ -22,7 +22,7 @@ class Gui(QtWidgets.QMainWindow):
         super(Gui, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("tes.ui", self)
+        uic.loadUi("../testing/tes_bacasemuadata/tes.ui", self)
 
         # getting current value
         current_time = QTime.currentTime()
