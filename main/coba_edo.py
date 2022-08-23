@@ -15,6 +15,8 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThread, Qt, QTimer, QTi
 
 import cgitb
 
+from MQTT import MQTTJSON
+
 cgitb.enable(format='text')
 
 # Port Detection START
@@ -91,6 +93,7 @@ class WorkerSignals(QObject):
     PAVals = pyqtSignal(float)
     PVVals = pyqtSignal(float)
     ERRs = pyqtSignal(int)
+    sensors = pyqtSignal(dict)
 
 
 class Worker(QRunnable):
@@ -153,9 +156,11 @@ class Worker(QRunnable):
             PDVal = sensor["PRESS"][0]
             PAVal = sensor["PRESS"][1]
             PVVal = sensor["PRESS"][2]
+
             # ERR = sensor["ERR"]
 
             # emit signals to be read in main GUI
+            self.signals.sensors.emit(sensor)
             self.signals.T1s.emit(T1)
             self.signals.T2s.emit(T2)
             self.signals.T3s.emit(T3)
@@ -194,6 +199,8 @@ class Gui(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(Gui, self).__init__(*args, **kwargs)
 
+        self.client = MQTTJSON.init()
+        self.threadpool = QThreadPool()
         # Load the UI Page
         uic.loadUi("../UIdesign/main.ui", self)
 
@@ -234,6 +241,17 @@ class Gui(QtWidgets.QMainWindow):
             "CLAMP": 0,
             "START": 0,
         }
+
+        self.readData()
+
+        self.JSON_EDO = {
+            "UF": [0.0, 0.0],
+            "PRESS": [0.0,0.0,0.0],
+            "TEMP": 0.0,
+            "EC": 0.0,
+            "FLOW": 0.0,
+        }
+
         self.sendData()
 
         self.rinse_mode.setCheckable(True)
@@ -250,13 +268,12 @@ class Gui(QtWidgets.QMainWindow):
         self.setting_button.clicked.connect(self.function_setting)
         self.concentrate_button.clicked.connect(self.function_concentrate)
         self.valve_button.clicked.connect(self.function_valve)
-        
+
         self.drain_button.clicked.connect(self.function_drain)
         self.dialyse_button.clicked.connect(self.function_dialyse)
         # self.bypass_button.clicked.connect(self.function_Bypass
 
-        self.threadpool = QThreadPool()
-        self.readData()
+
 
     def function_mode(self, mode):
         if mode == 'rinse':
@@ -348,8 +365,15 @@ class Gui(QtWidgets.QMainWindow):
         self.worker.signals.PDVals.connect(self.function_PDVal)
         self.worker.signals.PAVals.connect(self.function_PAVal)
         self.worker.signals.PVVals.connect(self.function_PVVal)
+        self.worker.signals.sensors.connect(self.function_sensors)
 
         self.threadpool.start(self.worker)
+
+    def function_sensors(self, s):
+        self.JSON_EDO["PRESS"] = s["PRESS"]
+        self.JSON_EDO["TEMP"] = s["T"][2]
+        self.JSON_EDO["EC"] = s["EC"]
+        self.JSON_EDO["FM"] = s["FM"]
 
     def function_T3(self, s):
         self.t3_edit.setText(str(s))
@@ -359,6 +383,8 @@ class Gui(QtWidgets.QMainWindow):
 
     def function_FM(self, s):
         self.fm_edit.setText(str(s))
+        self.JSON_EDO["FM"] = str(s)
+        MQTTJSON.send_mqtt(self.JSON_EDO, "HD1/DATA", self.client)
 
     def function_V1(self, s):
         self.v1_button.setText(str(s))
@@ -522,6 +548,7 @@ class Gui(QtWidgets.QMainWindow):
         self.send_teensy = '<' + self.send_teensy + '>\n'
 
         ser.write(self.send_teensy.encode('ascii'))
+
 
 class TimeWindow(QtWidgets.QMainWindow):
     submitted = pyqtSignal(str, int)
