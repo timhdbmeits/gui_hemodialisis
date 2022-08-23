@@ -293,12 +293,26 @@ class Gui(QtWidgets.QMainWindow):
         # self.bypass_button.clicked.connect(self.function_Bypass)
         # self.drain_button.clicked.connect(self.function_Drain)
         self.drain_button.clicked.connect(self.sendData)
-        # self.dialyse_button.clicked.connect(self.function_Dialyse)
+        self.dialyse_button.clicked.connect(self.mode1)
         # self.bypass_button.clicked.connect(self.function_Bypass)
         # self.drain_button.clicked.connect(self.function_Drain)
 
         self.threadpool = QThreadPool()
         self.readData()
+
+
+    def mode1(self):
+        self.JSON_IN["MODE"] = 0
+        print(self.JSON_IN)
+        self.send_teensy = str([*self.JSON_IN.values()])
+        self.send_teensy = self.send_teensy.replace('[', '')
+        self.send_teensy = self.send_teensy.replace(']', '')
+        self.send_teensy = self.send_teensy.replace(' ', '')
+        self.send_teensy = '<' + self.send_teensy + '>\n'
+
+
+        ser.write(self.send_teensy.encode('ascii'))
+
 
     def function_mode(self, mode):
         if mode == 'rinse':
@@ -365,19 +379,19 @@ class Gui(QtWidgets.QMainWindow):
         # self.worker.signals.HTs.connect(self.function_HT)
         # self.worker.signals.CLs.connect(self.function_CL)
         self.worker.signals.V1s.connect(self.function_V1)
-        # self.worker.signals.V12s.connect(self.function_V1)
-        # self.worker.signals.V12s.connect(self.function_V2)
-        # self.worker.signals.V12s.connect(self.function_V3)
-        # self.worker.signals.V12s.connect(self.function_V4)
-        # self.worker.signals.V12s.connect(self.function_V5)
-        # self.worker.signals.V12s.connect(self.function_V6)
-        # self.worker.signals.V12s.connect(self.function_V7)
-        # self.worker.signals.V12s.connect(self.function_V8)
-        # self.worker.signals.V12s.connect(self.function_V9)
-        # self.worker.signals.V12s.connect(self.function_V10)
-        # self.worker.signals.V12s.connect(self.function_V11)
+        # self.worker.signals.V2s.connect(self.function_V2)
+        # self.worker.signals.V3s.connect(self.function_V3)
+        # self.worker.signals.V4s.connect(self.function_V4)
+        # self.worker.signals.V5s.connect(self.function_V5)
+        # self.worker.signals.V6s.connect(self.function_V6)
+        # self.worker.signals.V7s.connect(self.function_V7)
+        # self.worker.signals.V8s.connect(self.function_V8)
+        # self.worker.signals.V9s.connect(self.function_V9)
+        # self.worker.signals.V10s.connect(self.function_V10)
+        # self.worker.signals.V11s.connect(self.function_V11)
         # self.worker.signals.V12s.connect(self.function_V12)
-        # self.worker.signals.V12s.connect(self.function_V13)
+        # self.worker.signals.V13s.connect(self.function_V13)
+        self.worker.signals.V14s.connect(self.function_V14)
         # self.worker.signals.BUBBLEs.connect(self.function_BUBBLE)
         # self.worker.signals.PDVals.connect(self.function_PDVal)
         # self.worker.signals.PAVals.connect(self.function_PAVal)
@@ -398,7 +412,10 @@ class Gui(QtWidgets.QMainWindow):
         self.v1_button.setText(str(s))
 
     def function_V12(self, s):
-        self.v12_edit.setText(str(s))
+        self.v12_button.setText(str(s))
+
+    def function_V14(self, s):
+        self.v14_button.setText(str(s))
 
 
     def function_BUBBLE(self, s):
@@ -427,22 +444,12 @@ class Gui(QtWidgets.QMainWindow):
     def startDia(self):
         global JSON_IN
 
-    def startDia(self):
-
         # creating a timer_time object, adding action to timer_time, update the timer_time every minutes
         self.timer_dia = QTimer(self)
         self.timer_dia.timeout.connect(self.timeDia)
         self.timer_dia.start(10)
-
         self.text = UFTIME_STR
-
         self.start = True
-
-        JSON_IN["MODE"] = 0
-        self.sendData()
-        print(JSON_IN)
-
-
 
 
         if UFTIME_VAL == 0:
@@ -477,8 +484,8 @@ class Gui(QtWidgets.QMainWindow):
 
             self.text = f'{self.hours:02}:{self.minutes:02}'
 
-        # Showing text
-        self.cd_edit.setText(self.text)
+            # Showing text
+            self.cd_edit.setText(self.text)
 
     def updateData(self, string, value):
         global UFTIME_VAL
@@ -524,6 +531,7 @@ class Gui(QtWidgets.QMainWindow):
     # TODO tes ngirim data ke microcontroller
     def sendData(self):
         # ngirim json mini pc ke master(teensy)
+        self.JSON_IN["MODE"] = 1
 
         self.send_teensy = str([*self.JSON_IN.values()])
         self.send_teensy = self.send_teensy.replace('[', '')
@@ -542,8 +550,8 @@ class Gui(QtWidgets.QMainWindow):
         # print(ser.readline())
         # print(bytes(dataJSON,'ascii'))
 
-        dataJSON = json.dumps(JSON_IN)
-        ser.write(bytes(dataJSON, 'utf-8'))
+        # dataJSON = json.dumps(JSON_IN)
+        # ser.write(bytes(dataJSON, 'utf-8'))
 
 
 
@@ -607,6 +615,6 @@ class LiterWindow(QtWidgets.QMainWindow):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     main = Gui()
-    main.showFullScreen()
+    # main.showFullScreen()
     main.show()
     sys.exit(app.exec_())
